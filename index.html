@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>致我最爱的宝贝 - 2026情人节纪念</title>
+    <style>
+        :root {
+            --primary-pink: #ffafbd;
+            --secondary-pink: #ffc3a0;
+            --rose-red: #ff4d6d;
+            --soft-white: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glow: 0 0 15px rgba(255, 77, 109, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'STKaiti', 'Microsoft YaHei', serif;
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            color: #5d4037;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- 极具仪式感的启动页 --- */
+        #start-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #ffcbd5, #ffafbd);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .heart-main {
+            font-size: 80px;
+            filter: drop-shadow(0 0 20px white);
+            animation: heartPulse 1.5s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes heartPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px white); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 30px white); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px white); }
+        }
+
+        #start-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            color: white;
+            background: var(--rose-red);
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+            letter-spacing: 4px;
+            animation: fadeIn 2s;
+        }
+
+        /* --- 主内容 --- */
+        #main-content { opacity: 0; transition: opacity 2s ease; }
+
+        canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 0; }
+
+        .container {
+            position: relative; z-index: 1;
+            max-width: 500px; margin: 0 auto; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            color: #fff;
+            text-align: center;
+            margin: 40px 0 20px;
+            text-shadow: 2px 2px 10px rgba(255, 77, 109, 0.5);
+            letter-spacing: 2px;
+        }
+
+        /* --- 恋爱计时器 --- */
+        .timer-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: var(--glow);
+            text-align: center;
+            width: 90%;
+            margin-bottom: 35px;
+        }
+        .timer-card p { font-size: 0.9rem; margin-bottom: 8px; color: #8d6e63; }
+        .timer-card b { font-size: 1.2rem; color: var(--rose-red); text-shadow: 1px 1px 0px white; }
+
+        /* --- 拍立得照片墙 (增强版) --- */
+        .photo-frame {
+            width: 85%;
+            background: white;
+            padding: 12px 12px 50px 12px;
+            border-radius: 5px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
+            transform: rotate(1deg);
+            margin-bottom: 40px;
+            transition: transform 0.5s;
+        }
+        .photo-frame:hover { transform: rotate(0deg) scale(1.02); }
+
+        .carousel {
+            width: 100%; height: 450px; 
+            overflow: hidden; border-radius: 3px;
+        }
+        .carousel-inner { display: flex; transition: transform 0.8s ease-in-out; height: 100%; }
+        .carousel-item { min-width: 100%; height: 100%; }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- 高级感感言区 --- */
+        .letter-area {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 25px;
+            border-left: 5px solid var(--rose-red);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+        }
+        .letter-content {
+            line-height: 2.2; font-size: 1.05rem; white-space: pre-wrap;
+            color: #4e342e; font-weight: 500;
+        }
+
+        /* --- 飘浮的点击爱心样式 --- */
+        .click-heart {
+            position: fixed;
+            color: var(--rose-red);
+            pointer-events: none;
+            z-index: 10000;
+            animation: heartFly 1s linear forwards;
+            font-size: 20px;
+        }
+
+        @keyframes heartFly {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+
+        .music-btn {
+            position: fixed; top: 25px; right: 25px; z-index: 1000;
+            width: 45px; height: 45px; background: white;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-size: 20px;
+        }
+        .rotate { animation: rotate 4s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        footer { padding-bottom: 40px; font-size: 0.8rem; opacity: 0.5; text-align: center; }
+    </style>
+</head>
+<body onclick="spawnHeart(event)">
+
+    <div id="start-overlay">
+        <div class="heart-main">💖</div>
+        <button id="start-btn">点击领取礼物</button>
+    </div>
+
+    <audio id="bgm" loop preload="auto">
+        <source src="小情歌-苏打绿.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="main-content">
+        <div class="music-btn rotate" id="musicBtn">🎵</div>
+        <canvas id="romantic-canvas"></canvas>
+
+        <div class="container">
+            <header>
+                <h1>致我最爱的宝宝 ❤️</h1>
+            </header>
+
+            <div class="timer-card">
+                <p>这是我们相爱的第</p>
+                <b id="count-up">0 天 0 小时 0 分 0 秒</b>
+            </div>
+
+            <div class="photo-frame">
+                <div class="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <div class="carousel-item"><img src="1.jpg" alt="1"></div>
+                        <div class="carousel-item"><img src="2.jpg" alt="2"></div>
+                        <div class="carousel-item"><img src="3.jpg" alt="3"></div>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 15px; color: #999; font-family: cursive;">Memory of Us</p>
+            </div>
+
+            <div class="letter-area">
+                <div class="letter-content" id="typewriter"></div>
+            </div>
+
+            <footer>
+                2026.02.14 情人节特制<br>爱你每一天，不仅仅在今天
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const overlay = document.getElementById('start-overlay');
+        const mainContent = document.getElementById('main-content');
+        const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('musicBtn');
+
+        // --- 核心交互启动 ---
+        startBtn.addEventListener('click', () => {
+            bgm.play().catch(e => console.log("等待激活"));
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.opacity = '1';
+                initAll();
+            }, 1000);
+        });
+
+        function initAll() {
+            startParticles();
+            startCarousel();
+            typeWriter();
+            setInterval(updateTimer, 1000);
+        }
+
+        // --- 1. 精确计时器 (2026年2月3日) ---
+        function updateTimer() {
+            // JS中月份：0是1月，1是2月
+            const startDate = new Date(2026, 1, 3, 0, 0, 0); 
+            const now = new Date();
+            const diff = now - startDate;
+
+            const d = Math.floor(diff / (1000*60*60*24));
+            const h = Math.floor((diff / (1000*60*60)) % 24);
+            const m = Math.floor((diff / (1000*60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('count-up').innerText = `${d}天 ${h}时 ${m}分 ${s}秒`;
+        }
+
+        // --- 2. 动态颗粒背景 (心与星) ---
+        const canvas = document.getElementById('romantic-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 15 + 5;
+                this.speed = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.type = Math.random() > 0.3 ? 'heart' : 'star';
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                ctx.globalAlpha = this.opacity;
+                if(this.type === 'heart') {
+                    ctx.fillStyle = '#ffafbd';
+                    ctx.font = `${this.size}px serif`;
+                    ctx.fillText('❤', this.x, this.y);
+                } else {
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 2, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function startParticles() {
+            for(let i=0; i<60; i++) particles.push(new Particle());
+            function loop() {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        // --- 3. 点击屏幕产生爱心 ---
+        function spawnHeart(e) {
+            const heart = document.createElement('div');
+            heart.className = 'click-heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = (e.clientX - 10) + 'px';
+            heart.style.top = (e.clientY - 10) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        // --- 4. 轮播图与打字机 (保持原有逻辑但优化体验) ---
+        function startCarousel() {
+            const inner = document.getElementById('carouselInner');
+            let i = 0;
+            setInterval(() => {
+                i = (i + 1) % 3;
+                inner.style.transform = `translateX(-${i * 100}%)`;
+            }, 4500);
+        }
+
+        const text = `亲爱的宝宝：
+
+今天是我们在一起后的第一个情人节，
+从认识你的那一刻起，
+我的世界每一秒都在变得更甜。
+
+我喜欢你，
+喜欢你的可爱，
+喜欢你的乖萌，
+喜欢你跳舞的样子，
+喜欢你所有的所有。
+
+我想和你三餐四季，
+想每天都能看见你，
+想和你永远在一起。
+
+宝宝，情人节快乐，
+我真的好爱你！`;
+
+        let charIdx = 0;
+        function typeWriter() {
+            if (charIdx < text.length) {
+                document.getElementById('typewriter').textContent += text.charAt(charIdx);
+                charIdx++;
+                setTimeout(typeWriter, 110);
+            }
+        }
+
+        musicBtn.onclick = () => {
+            if(bgm.paused) { bgm.play(); musicBtn.classList.add('rotate'); }
+            else { bgm.pause(); musicBtn.classList.remove('rotate'); }
+        };
+    </script>
+</body>
+</html>
